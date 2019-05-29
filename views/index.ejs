@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Document</title>
+    <style type="text/css" media="screen">
+        #editor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        #bar {
+            background: transparent;
+            position: fixed;
+            height: 200px;
+            width: 400px;
+            z-index: 1000;
+            margin-left: 570px;
+            color: #fff;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- <div id="bar">
+
+    </div> -->
+    <div id="editor" onkeypress="wrapdata()">
+
+    </div>
+    <iframe id="bar" frameBorder="0" style="color:#fff"></iframe>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.4/ace.js" type="text/javascript"
+        charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.4/mode-c_cpp.js" type="text/javascript"
+        charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/merbivore");
+        var JavaScriptMode = ace.require("ace/mode/c_cpp").Mode;
+        editor.session.setMode(new JavaScriptMode());
+        editor.setValue(`
+// Press Shift + R to Execute
+#include <iostream>
+using namespace std;
+int main() {
+cout<<"Hello World!";
+}
+
+        `, 1)
+       // console.log(editor.getValue());
+
+    </script>
+
+    <script>
+        function wrapdata() {
+            console.log(editor.getValue());
+            return editor.getValue();
+        }
+        var data = wrapdata();
+        $(document).keydown(function (e) {
+
+
+            if (e.shiftKey && e.keyCode === 82) {
+                console.log(data)
+                fetch('http://localhost:3000/getdata',
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            msg: data
+                        }),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                )
+                    .then(function (response) {
+                        // The response is a Response instance.
+                        // You parse the data into a useable format using `.json()`
+                        return response.json();
+                    }).then(function (data) {
+                        // `data` is the parsed version of the JSON returned from the above endpoint.
+                        console.log(data);  // { "userId": 1, "id": 1, "title": "...", "body": "..." }
+                        var idoc = document.getElementById('bar').contentWindow.document;
+                        idoc.open();
+
+                        idoc.write(data.rest);
+                        idoc.close();
+                    })
+                    .catch(err => console.log(err));
+            }
+        });
+
+    </script>
+</body>
+
+</html>
