@@ -1,0 +1,35 @@
+{
+  "name": "ide-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "clsx": "^1.0.4",
+    "concurrently": "^4.1.0",
+    "cors": "^2.8.5",
+    "ejs": "^2.6.1",
+    "express": "^4.17.0",
+    "react-animated-css": "^1.2.1",
+    "react-bootstrap": "^1.0.0-beta.8",
+    "react-flip-toolkit": "^6.6.2",
+    "react-three-fiber": "^2.1.4",
+    "request": "^2.88.0",
+    "three": "^0.104.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1"
+  },
+  "scripts": {
+    "server": "nodemon server.js",
+    "start": "node server.js",
+    "client-install": "npm install --prefix name",
+    "client": "npm start --prefix name",
+    "predeploy": "npm install --prefix name && npm run build --prefix name",
+    "deploy": "concurrently \"npm run server\" \"gh-pages -d build --prefix name\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix name && npm run build --prefix name"
+  },
+  "author": "",
+  "license": "ISC"
+}
